@@ -103,11 +103,10 @@ class _$AppErrorCopyWithImpl<$Res, $Val extends AppError>
   $Res call({Object? message = null}) {
     return _then(
       _value.copyWith(
-            message:
-                null == message
-                    ? _value.message
-                    : message // ignore: cast_nullable_to_non_nullable
-                        as String,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
           )
           as $Val,
     );
@@ -145,7 +144,7 @@ class __$$NetworkErrorImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                as String,
+                  as String,
       ),
     );
   }
@@ -304,11 +303,10 @@ class __$$ServerErrorImplCopyWithImpl<$Res>
   $Res call({Object? message = null}) {
     return _then(
       _$ServerErrorImpl(
-        message:
-            null == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                    as String,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
