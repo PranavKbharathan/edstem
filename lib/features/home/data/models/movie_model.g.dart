@@ -27,6 +27,9 @@ _$MovieResultImpl _$$MovieResultImplFromJson(Map<String, dynamic> json) =>
       json['title'] as String?,
       json['release_date'] as String?,
       json['poster_path'] as String?,
+      json['backdrop_path'] as String?,
+      json['overview'] as String?,
+      (json['vote_average'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$MovieResultImplToJson(_$MovieResultImpl instance) =>
@@ -34,4 +37,7 @@ Map<String, dynamic> _$$MovieResultImplToJson(_$MovieResultImpl instance) =>
       'title': instance.title,
       'release_date': instance.date,
       'poster_path': instance.image,
+      'backdrop_path': instance.bgImage,
+      'overview': instance.overview,
+      'vote_average': instance.rating,
     };

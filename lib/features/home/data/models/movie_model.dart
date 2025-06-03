@@ -20,6 +20,9 @@ class MovieResult with _$MovieResult {
     String? title,
     @JsonKey(name: "release_date") String? date,
     @JsonKey(name: "poster_path") String? image,
+    @JsonKey(name: "backdrop_path") String? bgImage,
+    String? overview,
+    @JsonKey(name: "vote_average") double? rating,
   ) = _MovieResult;
 
   factory MovieResult.fromJson(Map<String, dynamic> json) =>

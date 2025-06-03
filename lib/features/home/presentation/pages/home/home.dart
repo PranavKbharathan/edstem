@@ -1,6 +1,7 @@
 import 'package:edstem/core/constants/strings.dart';
 import 'package:edstem/core/style/colors.dart';
 import 'package:edstem/features/home/presentation/bloc/home_bloc.dart';
+import 'package:edstem/features/home/presentation/pages/detail/detail.dart';
 import 'package:edstem/features/home/presentation/widgets/home_field.dart';
 import 'package:edstem/shared/extensions/build_context.dart';
 import 'package:edstem/shared/widgets/common_snack.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatelessWidget {
               server: (value) => commonSnack(context, value.message),
             ),
             (r) {
-              if (r.results!.isEmpty) {
+              if (r.results != null && r.results!.isEmpty) {
                 commonSnack(context, "No movies found.");
               }
             },
@@ -133,6 +134,29 @@ class HomePage extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.push(
+                                          page: DetailPage(
+                                            details: {
+                                              "name": r.results![index].title,
+                                              "image":
+                                                  r.results![index].bgImage,
+                                              "about":
+                                                  r.results![index].overview,
+                                              "rating":
+                                                  r.results![index].rating,
+                                              "overview":
+                                                  r.results![index].overview,
+                                            },
+                                          ),
+                                        );
+                                        context.hideKeyboard();
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios_rounded,
                                       ),
                                     ),
                                   ],

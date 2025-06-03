@@ -246,6 +246,11 @@ mixin _$MovieResult {
   String? get date => throw _privateConstructorUsedError;
   @JsonKey(name: "poster_path")
   String? get image => throw _privateConstructorUsedError;
+  @JsonKey(name: "backdrop_path")
+  String? get bgImage => throw _privateConstructorUsedError;
+  String? get overview => throw _privateConstructorUsedError;
+  @JsonKey(name: "vote_average")
+  double? get rating => throw _privateConstructorUsedError;
 
   /// Serializes this MovieResult to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -268,6 +273,9 @@ abstract class $MovieResultCopyWith<$Res> {
     String? title,
     @JsonKey(name: "release_date") String? date,
     @JsonKey(name: "poster_path") String? image,
+    @JsonKey(name: "backdrop_path") String? bgImage,
+    String? overview,
+    @JsonKey(name: "vote_average") double? rating,
   });
 }
 
@@ -289,6 +297,9 @@ class _$MovieResultCopyWithImpl<$Res, $Val extends MovieResult>
     Object? title = freezed,
     Object? date = freezed,
     Object? image = freezed,
+    Object? bgImage = freezed,
+    Object? overview = freezed,
+    Object? rating = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -304,6 +315,18 @@ class _$MovieResultCopyWithImpl<$Res, $Val extends MovieResult>
                 ? _value.image
                 : image // ignore: cast_nullable_to_non_nullable
                       as String?,
+            bgImage: freezed == bgImage
+                ? _value.bgImage
+                : bgImage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            overview: freezed == overview
+                ? _value.overview
+                : overview // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            rating: freezed == rating
+                ? _value.rating
+                : rating // ignore: cast_nullable_to_non_nullable
+                      as double?,
           )
           as $Val,
     );
@@ -323,6 +346,9 @@ abstract class _$$MovieResultImplCopyWith<$Res>
     String? title,
     @JsonKey(name: "release_date") String? date,
     @JsonKey(name: "poster_path") String? image,
+    @JsonKey(name: "backdrop_path") String? bgImage,
+    String? overview,
+    @JsonKey(name: "vote_average") double? rating,
   });
 }
 
@@ -343,6 +369,9 @@ class __$$MovieResultImplCopyWithImpl<$Res>
     Object? title = freezed,
     Object? date = freezed,
     Object? image = freezed,
+    Object? bgImage = freezed,
+    Object? overview = freezed,
+    Object? rating = freezed,
   }) {
     return _then(
       _$MovieResultImpl(
@@ -358,6 +387,18 @@ class __$$MovieResultImplCopyWithImpl<$Res>
             ? _value.image
             : image // ignore: cast_nullable_to_non_nullable
                   as String?,
+        freezed == bgImage
+            ? _value.bgImage
+            : bgImage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        freezed == overview
+            ? _value.overview
+            : overview // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        freezed == rating
+            ? _value.rating
+            : rating // ignore: cast_nullable_to_non_nullable
+                  as double?,
       ),
     );
   }
@@ -370,6 +411,9 @@ class _$MovieResultImpl implements _MovieResult {
     this.title,
     @JsonKey(name: "release_date") this.date,
     @JsonKey(name: "poster_path") this.image,
+    @JsonKey(name: "backdrop_path") this.bgImage,
+    this.overview,
+    @JsonKey(name: "vote_average") this.rating,
   );
 
   factory _$MovieResultImpl.fromJson(Map<String, dynamic> json) =>
@@ -383,10 +427,18 @@ class _$MovieResultImpl implements _MovieResult {
   @override
   @JsonKey(name: "poster_path")
   final String? image;
+  @override
+  @JsonKey(name: "backdrop_path")
+  final String? bgImage;
+  @override
+  final String? overview;
+  @override
+  @JsonKey(name: "vote_average")
+  final double? rating;
 
   @override
   String toString() {
-    return 'MovieResult(title: $title, date: $date, image: $image)';
+    return 'MovieResult(title: $title, date: $date, image: $image, bgImage: $bgImage, overview: $overview, rating: $rating)';
   }
 
   @override
@@ -396,12 +448,17 @@ class _$MovieResultImpl implements _MovieResult {
             other is _$MovieResultImpl &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.image, image) || other.image == image));
+            (identical(other.image, image) || other.image == image) &&
+            (identical(other.bgImage, bgImage) || other.bgImage == bgImage) &&
+            (identical(other.overview, overview) ||
+                other.overview == overview) &&
+            (identical(other.rating, rating) || other.rating == rating));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, title, date, image);
+  int get hashCode =>
+      Object.hash(runtimeType, title, date, image, bgImage, overview, rating);
 
   /// Create a copy of MovieResult
   /// with the given fields replaced by the non-null parameter values.
@@ -422,6 +479,9 @@ abstract class _MovieResult implements MovieResult {
     final String? title,
     @JsonKey(name: "release_date") final String? date,
     @JsonKey(name: "poster_path") final String? image,
+    @JsonKey(name: "backdrop_path") final String? bgImage,
+    final String? overview,
+    @JsonKey(name: "vote_average") final double? rating,
   ) = _$MovieResultImpl;
 
   factory _MovieResult.fromJson(Map<String, dynamic> json) =
@@ -435,6 +495,14 @@ abstract class _MovieResult implements MovieResult {
   @override
   @JsonKey(name: "poster_path")
   String? get image;
+  @override
+  @JsonKey(name: "backdrop_path")
+  String? get bgImage;
+  @override
+  String? get overview;
+  @override
+  @JsonKey(name: "vote_average")
+  double? get rating;
 
   /// Create a copy of MovieResult
   /// with the given fields replaced by the non-null parameter values.
