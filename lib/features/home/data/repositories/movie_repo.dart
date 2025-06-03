@@ -10,10 +10,10 @@ import 'package:http/http.dart' as http;
 
 class MovieRepo implements IMovieRepo {
   @override
-  Future<Either<AppError, MovieModel>> movieSearch(String name) async {
+  Future<Either<AppError, MovieModel>> movieSearch(String name,int page) async {
     try {
       final url = Uri.parse(
-        '${baseUrl}search/movie?api_key=${dotenv.env['TMDB_API_KEY']}&query=$name',
+        '${baseUrl}search/movie?api_key=${dotenv.env['TMDB_API_KEY']}&query=$name&page=$page',
       );
       final response = await http.get(url);
 

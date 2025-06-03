@@ -12,11 +12,31 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc(final IMovieRepo imovieRepo) : super(HomeState.initial()) {
     on<_SearchMovie>((event, emit) async {
-      emit(state.copyWith(isLoading: true, searchMovie: None()));
+      int page = state.page;
+      
+      if (event.isNextPage) {
+        page += 1;
+        emit(state.copyWith(isLoading: true, searchMovie: None()));
+      } else {
+        page = 1;
+        emit(state.copyWith(isLoading: true, searchMovie: None(), movies: []));
+      }
+      
 
-      final searchMovie = await imovieRepo.movieSearch(event.name);
+      final searchMovie = await imovieRepo.movieSearch(event.name, page);
 
-      emit(state.copyWith(isLoading: false, searchMovie: Some(searchMovie)));
+      searchMovie.fold(
+        (l) =>
+            emit(state.copyWith(isLoading: false, searchMovie: Some(Left(l)))),
+        (r) => emit(
+          state.copyWith(
+            isLoading: false,
+            page: page,
+            searchMovie: Some(Right(r)),
+            movies: [...state.movies!, ...r.results!],
+          ),
+        ),
+      );
     });
   }
 }

@@ -9,9 +9,30 @@ import 'package:edstem/shared/widgets/common_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
+class HomePage extends StatefulWidget {
   HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _homeFieldController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      final position = _scrollController.position;
+
+      if (position.pixels == position.maxScrollExtent) {
+        context.read<HomeBloc>().add(
+          HomeEvent.searchMovie(_homeFieldController.text, true),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +47,7 @@ class HomePage extends StatelessWidget {
               server: (value) => commonSnack(context, value.message),
             ),
             (r) {
-              if (r.results != null && r.results!.isEmpty) {
+              if (r.results != null && r.results!.isEmpty&&_homeFieldController.text.isNotEmpty) {
                 commonSnack(context, "No movies found.");
               }
             },
@@ -54,120 +75,125 @@ class HomePage extends StatelessWidget {
           children: [
             Padding(
               padding: context.padxy(16, 24),
-              child: HomeField(controller: controller),
+              child: HomeField(controller: _homeFieldController),
             ),
             BlocBuilder<HomeBloc, HomeState>(
               buildWhen: (p, c) =>
                   p.searchMovie != c.searchMovie || p.isLoading != c.isLoading,
               builder: (context, state) {
-                if (state.isLoading) {
+                if (state.isLoading && state.movies!.isEmpty) {
                   return const Expanded(
                     child: Center(
                       child: CircularProgressIndicator(color: colorWhite),
                     ),
                   );
                 }
-                return state.searchMovie.fold(
-                  () => Expanded(
-                    child: Center(
-                      child: Image.asset(
-                        "${appImage}camera.png",
-                        height: 100,
-                        width: 100,
-                      ),
-                    ),
-                  ),
-                  (a) => a.fold(
-                    (l) => SizedBox.shrink(),
-                    (r) => switch (r.results != null && r.results!.isNotEmpty) {
-                      false => Expanded(
-                        child: Center(
+                return Expanded(
+                  child: state.movies != null && state.movies!.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: state.isLoading
+                              ? state.movies!.length + 1
+                              : state.movies!.length,
+                          controller: _scrollController,
+                          itemBuilder: (context, index) {
+                            if (index == state.movies!.length) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: colorWhite,
+                                  ),
+                                ),
+                              );
+                            }
+                            return Padding(
+                              padding: context.padAll(8),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: colorBlack,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: colorWhite10,
+                                      blurRadius: 8,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: context.padAll(16),
+                                  child: Row(
+                                    children: [
+                                      state.movies![index].image != null
+                                          ? Image.network(
+                                              "$imageUrl${state.movies![index].image}",
+                                              height: 100,
+                                              width: 100,
+                                            )
+                                          : Image.asset(
+                                              "${appImage}picture.png",
+                                              height: 100,
+                                              width: 100,
+                                            ),
+                                      Expanded(
+                                        child: Column(
+                                          spacing: 8,
+                                          children: [
+                                            CommonText(
+                                              data: state.movies![index].title!,
+                                              textAlign: TextAlign.center,
+                                              textColor: colorWhite,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            CommonText(
+                                              data: state.movies![index].date!,
+                                              textColor: colorWhite,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          context.push(
+                                            page: DetailPage(
+                                              details: {
+                                                "name":
+                                                    state.movies![index].title,
+                                                "image": state
+                                                    .movies![index]
+                                                    .bgImage,
+                                                "about": state
+                                                    .movies![index]
+                                                    .overview,
+                                                "rating":
+                                                    state.movies![index].rating,
+                                                "overview": state
+                                                    .movies![index]
+                                                    .overview,
+                                              },
+                                            ),
+                                          );
+                                          context.hideKeyboard();
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
                           child: Image.asset(
                             "${appImage}camera.png",
                             height: 100,
                             width: 100,
                           ),
                         ),
-                      ),
-                      true => Expanded(
-                        child: ListView.builder(
-                          itemCount: r.results!.length,
-                          itemBuilder: (context, index) => Padding(
-                            padding: context.padAll(8),
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: colorBlack,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(color: colorWhite10, blurRadius: 8),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: context.padAll(16),
-                                child: Row(
-                                  children: [
-                                    r.results![index].image != null
-                                        ? Image.network(
-                                            "$imageUrl${r.results![index].image}",
-                                            height: 100,
-                                            width: 100,
-                                          )
-                                        : Image.asset(
-                                            "${appImage}picture.png",
-                                            height: 100,
-                                            width: 100,
-                                          ),
-                                    Expanded(
-                                      child: Column(
-                                        spacing: 8,
-                                        children: [
-                                          CommonText(
-                                            data: r.results![index].title!,
-                                            textAlign: TextAlign.center,
-                                            textColor: colorWhite,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          CommonText(
-                                            data: r.results![index].date!,
-                                            textColor: colorWhite,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.push(
-                                          page: DetailPage(
-                                            details: {
-                                              "name": r.results![index].title,
-                                              "image":
-                                                  r.results![index].bgImage,
-                                              "about":
-                                                  r.results![index].overview,
-                                              "rating":
-                                                  r.results![index].rating,
-                                              "overview":
-                                                  r.results![index].overview,
-                                            },
-                                          ),
-                                        );
-                                        context.hideKeyboard();
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    },
-                  ),
                 );
               },
             ),

@@ -1,6 +1,5 @@
 import 'package:edstem/core/constants/strings.dart';
 import 'package:edstem/features/home/data/repositories/movie_repo.dart';
-import 'package:edstem/features/home/domain/repositories/i_movie_repo.dart';
 import 'package:edstem/features/home/presentation/bloc/home_bloc.dart';
 import 'package:edstem/features/home/presentation/pages/home/home.dart';
 import 'package:edstem/shared/extensions/build_context.dart';
